@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+uv run python scripts/update_worklog.py && git add spec/index.md
