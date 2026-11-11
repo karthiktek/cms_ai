@@ -9,11 +9,11 @@ from fastapi.responses import JSONResponse
 
 from app.config import get_settings
 
-settings = get_settings()
 router = APIRouter()
 
 
 async def check_database() -> str:
+    settings = get_settings()
     try:
         conn = await asyncpg.connect(settings.DATABASE_URL, timeout=settings.HEALTH_TIMEOUT_SECONDS)
         await conn.execute("SELECT 1")
@@ -24,6 +24,7 @@ async def check_database() -> str:
 
 
 async def check_redis() -> str:
+    settings = get_settings()
     try:
         client = redis.from_url(settings.REDIS_URL, decode_responses=True)
         await client.ping()
@@ -34,6 +35,7 @@ async def check_redis() -> str:
 
 
 async def check_model() -> str:
+    settings = get_settings()
     try:
         async with httpx.AsyncClient(timeout=settings.HEALTH_TIMEOUT_SECONDS) as client:
             response = await client.get(f"{settings.MODEL_SERVER_URL}/api/tags")
@@ -71,6 +73,7 @@ async def run_health_checks() -> dict[str, str]:
 
 @router.get("/health")
 async def health() -> JSONResponse:
+    settings = get_settings()
     checks = await run_health_checks()
     response_body = {
         "status": "ok",

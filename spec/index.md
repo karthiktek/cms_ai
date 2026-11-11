@@ -86,10 +86,12 @@ what is planned, what is being built, and what has shipped.
 ## Decisions
 
 - Only LLM: Qwen3.5-4B (`LLM_MODEL` env var)
+- Qwen3.5 thinking OFF for agent calls (`LLM_THINK=false`)
 - Jobs run on Celery with Redis broker
 - Redis is cache only; PostgreSQL `ai` schema is the durable store
 - Option A: AI saves `ai_draft`, backend sends verified version, both kept
 - IDs are TEXT with a short prefix
+- Dev without Docker: Ollama app + Supabase + Upstash
 - Work log updates are managed by `scripts/update_worklog.py` and the local `.githooks/pre-commit` hook.
 
 ## Current phase
@@ -111,5 +113,5 @@ what is planned, what is being built, and what has shipped.
 <!-- WORKLOG:START -->
 | Date | What was done | Result |
 |------|---------------|--------|
-| 2026-11-11 | Updated the tracker and verified the repo checks for the worklog automation task. | tests passed (ruff + mypy + pytest) |
+| 2026-11-11 | Feature #1 cleanup: moved env reads behind functions, added `LLM_THINK`, and verified the repo checks. | tests passed (ruff + mypy + pytest) |
 <!-- WORKLOG:END -->

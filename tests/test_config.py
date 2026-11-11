@@ -24,4 +24,19 @@ def test_defaults_applied(monkeypatch: pytest.MonkeyPatch) -> None:
     settings = Settings()  # type: ignore[call-arg]
 
     assert settings.LLM_MODEL == "qwen3.5:4b"
+    assert settings.LLM_THINK is False
     assert settings.API_PORT == 8000
+
+
+def test_llm_think_can_be_enabled(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("AI_SERVICE_KEY", "service-key")
+    monkeypatch.setenv("DATABASE_URL", "postgresql+asyncpg://postgres:postgres@localhost:5432/cms_ai")
+    monkeypatch.setenv("REDIS_URL", "redis://localhost:6379/0")
+    monkeypatch.setenv("CELERY_BROKER_URL", "redis://localhost:6379/1")
+    monkeypatch.setenv("CELERY_RESULT_BACKEND", "redis://localhost:6379/2")
+    monkeypatch.setenv("MODEL_SERVER_URL", "http://localhost:11434")
+    monkeypatch.setenv("LLM_THINK", "true")
+
+    settings = Settings()  # type: ignore[call-arg]
+
+    assert settings.LLM_THINK is True

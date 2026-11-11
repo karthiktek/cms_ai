@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     CELERY_RESULT_BACKEND: str = Field(...)
     MODEL_SERVER_URL: str = Field(...)
     LLM_MODEL: str = "qwen3.5:4b"
+    LLM_THINK: bool = False
     EMBED_MODEL: str = "qwen3-embedding:0.6b"
     LLM_TIMEOUT_SECONDS: int = 60
     LLM_MAX_RETRIES: int = 1

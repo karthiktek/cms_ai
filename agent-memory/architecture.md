@@ -1,7 +1,7 @@
 # Architecture & Project Structure
 
 > **Last updated:** 2026-11-11
-> **Changed:** Added the implemented service skeleton and aligned the project structure with the current FastAPI + Celery base.
+> **Changed:** Documented the local git hook and worklog script in the project structure for the feature #1 cleanup.
 
 ---
 
@@ -93,6 +93,10 @@ sdd-template/
 ├── Dockerfile
 ├── pyproject.toml / uv.lock
 ├── .env.example                   ← env var names only, no secrets
+├── .githooks/
+│   └── pre-commit                ← runs `update_worklog.py` and stages `spec/index.md`
+├── scripts/
+│   └── update_worklog.py         ← syncs the work log from `git log` into the marker block
 └── README.md
 ```
 
