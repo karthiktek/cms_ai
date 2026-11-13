@@ -1,7 +1,7 @@
 # API Reference
 
-> **Last updated:** 2026-11-11
-> **Changed:** The implemented service skeleton exposes the health endpoint; the job-endpoint contract remains planned for feature #5 and is not yet active.
+> **Last updated:** 2026-11-12
+> **Changed:** Documented the shared SQLAlchemy database probe and name-keyed extensible health checks.
 
 ---
 
@@ -66,6 +66,8 @@ Rules:
 ### GET /health
 
 Checks that the service, database, Redis and model server can be reached.
+
+The database check executes `SELECT 1` through the shared `app.database.check_database_connection` helper using the full `DATABASE_URL` (including `postgresql+asyncpg://`) and disposes the engine afterward. Health checks are stored as a name-to-function dictionary, run concurrently, and return each result under its registered name. See `agent-memory/flow.md` for request and connection paths.
 
 **Response 200**
 ```json

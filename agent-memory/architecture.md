@@ -1,7 +1,7 @@
 # Architecture & Project Structure
 
-> **Last updated:** 2026-11-11
-> **Changed:** Documented the local git hook and worklog script in the project structure for the feature #1 cleanup.
+> **Last updated:** 2026-11-12
+> **Changed:** Added the shared database probe to the app structure and documented the name-keyed health check map.
 
 ---
 
@@ -20,6 +20,7 @@ sdd-template/
 │       └── intake_agent.md
 │
 ├── agent-memory/
+│   ├── flow.md
 │   ├── project-overview.md
 │   ├── architecture.md
 │   ├── api-reference.md
@@ -29,6 +30,7 @@ sdd-template/
 ├── app/                           ← source code
 │   ├── main.py                    — creates the FastAPI app (no server start here)
 │   ├── config.py                  — settings from environment variables (pydantic-settings)
+│   ├── database.py                — shared SQLAlchemy async `SELECT 1` probe for health and Doctor
 │   │
 │   ├── api/                       — HTTP layer (thin)
 │   │   ├── deps.py                — service-key check, workspace headers, request ID
@@ -41,7 +43,7 @@ sdd-template/
 │   │   └── registry.py            — maps agent name ("intake_summary") → agent runner
 │   │
 │   ├── tasks/                     — Celery
-│   │   ├── celery_app.py          — Celery app + Redis broker config
+│   │   ├── celery_app.py          — Celery app + Redis broker config + system task discovery
 │   │   └── run_agent.py           — one task: load input → run agent → save → update job
 │   │
 │   ├── agents/                    — one folder per agent (LangGraph)
@@ -99,6 +101,8 @@ sdd-template/
 │   └── update_worklog.py         ← syncs the work log from `git log` into the marker block
 └── README.md
 ```
+
+See `agent-memory/flow.md` for detailed startup, connection, health, migration, worker, and planned request-flow diagrams.
 
 ---
 

@@ -1,7 +1,7 @@
 # Team Guide — TekWissen CMS AI Service
 
-> **Last updated:** 2026-11-11
-> **Changed:** Aligned docs with sdd-template folder structure
+> **Last updated:** 2026-11-12
+> **Changed:** Added the service flow guide and clarified that the Intake Summary job path remains planned.
 
 Welcome. Read this before writing any code.
 
@@ -60,7 +60,7 @@ One file at the project root. It has a short list of rules that never change, pl
 
 ## Layer 2 — agent-memory/
 
-Five markdown files. Each answers a different question:
+Six markdown files. Each answers a different question:
 
 | File | Question it answers |
 |------|-------------------|
@@ -68,6 +68,7 @@ Five markdown files. Each answers a different question:
 | `architecture.md` | What folders exist? How do the layers connect? What is the request flow? |
 | `api-reference.md` | What endpoints exist? Which headers, request and response shapes, and error codes? |
 | `database.md` | What tables, row-level security rules, queries and repository functions exist? |
+| `flow.md` | How do requests, data and connections move through the service? |
 | `conventions.md` | What rules must every developer follow? |
 
 **Every file has a `Last updated` timestamp** so you can tell at a glance

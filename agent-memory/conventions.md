@@ -1,7 +1,7 @@
 # Coding Conventions
 
-> **Last updated:** 2026-11-11
-> **Changed:** Updated the app lifecycle rule to prefer FastAPI lifespan context managers instead of deprecated startup/shutdown hooks.
+> **Last updated:** 2026-11-12
+> **Changed:** Documented the shared async database probe and name-keyed health check registry pattern.
 
 These rules apply to every change in this codebase.
 When in doubt, match the existing code — don't introduce new patterns.
@@ -17,6 +17,8 @@ When in doubt, match the existing code — don't introduce new patterns.
 - `async` for all I/O: database, Redis, model calls, HTTP. Celery tasks call async code through one shared helper.
 - Dependencies managed with `uv`; versions locked in `uv.lock`.
 - FastAPI app lifecycle code uses a single `lifespan` context manager passed to `FastAPI(lifespan=...)`; deprecated `@app.on_event("startup"/"shutdown")` hooks are not used.
+- The application and `app.doctor` use `app.config.Settings` as their single environment configuration source; do not implement separate `.env` parsing in the doctor. Tests that need isolation pass `_env_file=None` or explicitly set environment variables.
+- Database connectivity probes shared by health and Doctor live in `app.database`; pass the SQLAlchemy URL unchanged and configure the caller's timeout.
 - Formatting and linting with Ruff; no unused imports, no commented-out code, no `print()` (use the logger).
 - `snake_case` for functions, variables, files and JSON fields; `PascalCase` for classes and Pydantic models; `UPPER_CASE` for constants.
 

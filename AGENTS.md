@@ -4,8 +4,8 @@ inclusion: always
 
 # Agent Instructions
 
-> **Last updated:** 2026-11-11
-> **Changed:** Aligned docs with sdd-template folder structure
+> **Last updated:** 2026-11-12
+> **Changed:** Added flow.md to the knowledge-base read and request/data-path update requirements.
 
 You are working on **TekWissen CMS – AI Service**, the separate AI backend for TekWissen's change management product. It runs AI agents (Intake Summary first, then Project Understanding, Change Assessment, the Workspace Agent and the Learning Agent) on one local model, Qwen3.5-4B, and returns grounded, schema-checked drafts to the main backend for users to verify.
 
@@ -30,7 +30,7 @@ You are working on **TekWissen CMS – AI Service**, the separate AI backend for
 
 ## Step 1 — Read the knowledge base
 
-Read all five files before writing any code.
+Read all six files before writing any code.
 They reflect the current state of the codebase. Trust them.
 
 | File | What it contains |
@@ -40,6 +40,7 @@ They reflect the current state of the codebase. Trust them.
 | `agent-memory/api-reference.md`    | Every endpoint: headers, request bodies, response shapes, error codes |
 | `agent-memory/database.md`         | `ai` schema, row-level security, queries, repository functions |
 | `agent-memory/conventions.md`      | Coding rules you must follow on every change |
+| `agent-memory/flow.md`             | How requests, data and connections move through the service |
 
 Each file has a `Last updated` header at the top.
 If a file looks stale compared to the code you can see, update it before you go on.
@@ -81,6 +82,7 @@ For every file you update:
 | Agent added, or agent steps, prompt version or output fields changed | `agent-memory/architecture.md` (Agents section) |
 | Dependency, env var, script, or test count change | `agent-memory/project-overview.md` |
 | New pattern or coding rule introduced | `agent-memory/conventions.md` |
+| Any request, job, connection or data path changed | `agent-memory/flow.md` (diagrams, status marks and change log) |
 | Decision made, or open question answered | `spec/index.md` (Decisions / Open questions) |
 
 Also update `spec/index.md`:

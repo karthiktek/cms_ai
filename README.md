@@ -1,7 +1,7 @@
 # TekWissen CMS – AI Service · SDD Setup
 
-> **Last updated:** 2026-11-11
-> **Changed:** Aligned docs with sdd-template folder structure
+> **Last updated:** 2026-11-12
+> **Changed:** Added the service flow guide and refreshed the checked health and Celery implementation notes.
 
 **Spec-driven development for the AI backend.** This folder setup keeps AI coding agents and new developers up to date with the AI service from day one: the agents, the model gateway, the job flow and the `ai` schema.
 
@@ -28,6 +28,7 @@ sdd-template/
     ├── architecture.md
     ├── api-reference.md
     ├── database.md
+    ├── flow.md
     └── conventions.md
 ```
 
@@ -55,9 +56,10 @@ Developers start with `spec/team-guide.md`.
 4. `agent-memory/api-reference.md`: V1 job endpoints are filled ✅
 5. `agent-memory/database.md`: AI schema and repository guidance are filled ✅
 6. `agent-memory/conventions.md`: coding and workflow rules are filled ✅
-7. `spec/index.md`: feature register, open questions and decisions are filled ✅
-8. `spec/team-guide.md`: developer onboarding is filled ✅
-9. `spec/specification/intake_agent.md`: Intake Summary Agent specification is filled ✅
+7. `agent-memory/flow.md`: startup, health, doctor, migration, worker, and planned job flows are documented ✅
+8. `spec/index.md`: feature register, open questions and decisions are filled ✅
+9. `spec/team-guide.md`: developer onboarding is filled ✅
+10. `spec/specification/intake_agent.md`: Intake Summary Agent specification is filled ✅
 
 ---
 
