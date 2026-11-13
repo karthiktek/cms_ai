@@ -1,7 +1,7 @@
 # Feature Specifications Index
 
 > **Last updated:** 2026-11-12
-> **Changed:** Verified feature #1 against live PostgreSQL, Redis, and Ollama services.
+> **Changed:** Reviewed remaining local-dev setup, documentation, and test/config changes; all requested checks pass.
 
 This is the single source of truth for every feature in the **TekWissen CMS – AI Service**:
 what is planned, what is being built, and what has shipped.
@@ -99,8 +99,8 @@ what is planned, what is being built, and what has shipped.
 
 ## Current phase
 
-- Phase: Feature #1 is verified on real services; Doctor, Alembic, and `/health` passed for PostgreSQL, Redis, and Ollama.
-- Next: feature #2, service auth & errors.
+- Phase: Feature #1 and local dev setup (#1b) are complete; live services and the full repository checks pass.
+- Next: feature #2, service auth & errors; remaining reviewed changes are grouped for commit and push.
 
 ## Known issues
 
@@ -127,4 +127,5 @@ what is planned, what is being built, and what has shipped.
 | 2026-11-12 | Configured Upstash Redis cache, broker, and result URLs to use DB 0; ran live Doctor checks. | blocked: PostgreSQL connection timed out; Redis and Ollama passed; migrations/API checks not run |
 | 2026-11-12 | Diagnosed the PostgreSQL timeout with DNS, TCP checks on 5432/6543, Google HTTPS comparison, and a 20-second SQL probe. | passed: DNS/TCP and 20-second database probe; migrations/API health not requested or run |
 | 2026-11-12 | Shared the configurable health timeout, set dev timeout to 15 seconds for Sydney, applied Alembic migrations, and verified `/health` on live services. | passed: Doctor, migration, and `/health` all green |
+| 2026-11-13 | Reviewed the remaining local-dev documentation and test/config changes; ran Ruff, mypy app, and pytest before grouped commits. | passed: Ruff, mypy app, pytest (29 passed; one third-party deprecation warning) |
 <!-- WORKLOG:END -->
