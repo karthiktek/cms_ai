@@ -29,6 +29,10 @@ data/raw/
 # OS/editor
 .DS_Store
 .vscode/
+!.vscode/
+.vscode/*
+!.vscode/tasks.json
+!.vscode/settings.json
 
 .env
 .venv/

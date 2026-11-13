@@ -1,7 +1,7 @@
 # Project Overview
 
 > **Last updated:** 2026-11-13
-> **Changed:** Added Flower monitoring and local service startup links.
+> **Changed:** Added the VS Code one-window startup task workflow.
 
 ---
 
@@ -163,6 +163,10 @@ uv run celery -A app.tasks.celery_app flower --port=5555
 ```
 
 The `solo` worker pool is suitable for the local Windows development environment. The API and Flower monitor are separate from the worker process.
+
+## One-window setup
+
+In VS Code, choose **Terminal → Run Task → Start all** to launch the API, Celery worker, and Flower in parallel in separate terminals grouped as `services`. Use **Terminal → Run Task → Doctor** to check local service configuration and **Terminal → Run Task → Tests** to run the test suite. The workspace Python interpreter is set to `.venv`.
 
 ---
 

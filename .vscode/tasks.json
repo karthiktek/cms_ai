@@ -1,0 +1,54 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "API",
+      "type": "shell",
+      "command": "uv",
+      "args": ["run", "uvicorn", "app.main:app", "--port", "8000", "--reload"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": { "panel": "dedicated", "group": "services", "reveal": "always" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Worker",
+      "type": "shell",
+      "command": "uv",
+      "args": ["run", "celery", "-A", "app.tasks.celery_app", "worker", "--pool=solo", "-l", "info", "-n", "cms-ai@%h"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": { "panel": "dedicated", "group": "services", "reveal": "always" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Flower",
+      "type": "shell",
+      "command": "uv",
+      "args": ["run", "celery", "-A", "app.tasks.celery_app", "flower", "--port=5555"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": { "panel": "dedicated", "group": "services", "reveal": "always" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start all",
+      "dependsOn": ["API", "Worker", "Flower"],
+      "dependsOrder": "parallel",
+      "problemMatcher": []
+    },
+    {
+      "label": "Doctor",
+      "type": "shell",
+      "command": "uv",
+      "args": ["run", "python", "-m", "app.doctor"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Tests",
+      "type": "shell",
+      "command": "uv",
+      "args": ["run", "pytest"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    }
+  ]
+}

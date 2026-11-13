@@ -1,7 +1,7 @@
 # Architecture & Project Structure
 
 > **Last updated:** 2026-11-13
-> **Changed:** Documented the preserved legacy model-agent project and its local-only assets.
+> **Changed:** Documented the legacy model-agent project and VS Code one-window task configuration.
 
 ---
 
@@ -12,6 +12,9 @@ sdd-template/
 │
 ├── AGENTS.md
 ├── README.md
+├── .vscode/
+│   ├── tasks.json                 — API, worker, Flower, Doctor, Tests and parallel Start all tasks
+│   └── settings.json              — project `.venv` Python interpreter
 │
 ├── spec/
 │   ├── index.md
@@ -109,6 +112,8 @@ sdd-template/
 See `agent-memory/flow.md` for detailed startup, connection, health, migration, worker, and planned request-flow diagrams.
 
 The legacy project is retained for reference and local use; its GGUF weights and source/processed/gold datasets are ignored by Git. New service features belong under `app/` and must follow the gateway, schema, prompt, and rules boundaries below.
+
+VS Code workspace tasks start the API, worker, and Flower together in separate terminals; see `agent-memory/project-overview.md` for the one-window workflow.
 
 ---
 

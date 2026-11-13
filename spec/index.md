@@ -1,7 +1,7 @@
 # Feature Specifications Index
 
 > **Last updated:** 2026-11-13
-> **Changed:** Recorded the legacy model output-contract question for Feature #6.
+> **Changed:** Recorded the one-window VS Code development tasks.
 
 This is the single source of truth for every feature in the **TekWissen CMS – AI Service**:
 what is planned, what is being built, and what has shipped.
@@ -100,8 +100,8 @@ what is planned, what is being built, and what has shipped.
 
 ## Current phase
 
-- Phase: Backend skeleton is integrated with the preserved legacy model-agent project on `merge/legacy-model-agent`; legacy code and local data remain unchanged and excluded from Git where specified.
-- Next: review the merge PR; decide the Feature #6 output contract before starting that feature.
+- Phase: Backend skeleton is integrated with the preserved legacy model-agent project; VS Code one-window development tasks are available.
+- Next: feature #2, service auth & errors; decide the Feature #6 output contract before starting that feature.
 
 ## Known issues
 
@@ -118,6 +118,7 @@ what is planned, what is being built, and what has shipped.
 <!-- WORKLOG:START -->
 | Date | What was done | Result |
 |------|---------------|--------|
+| 2026-11-13 | Added VS Code API, worker, Flower, parallel Start all, Doctor, and Tests tasks; set the workspace interpreter to `.venv`. | passed: task and settings JSON validated; Doctor, Ruff, mypy app, and pytest (29 passed; one third-party deprecation warning) |
 | 2026-11-13 | Added the legacy model-agent project under `legacy/cms_agent`, excluded local model/data/environment assets from Git, scoped Ruff away from unchanged legacy code, and recorded the Feature #6 output-contract question. | passed: backup count/size match; Doctor, Ruff, mypy app, pytest (29 passed), and `/health` passed |
 | 2026-11-11 | Feature #1 cleanup: moved env reads behind functions, added `LLM_THINK`, and verified the repo checks. | tests passed (ruff + mypy + pytest) |
 | 2026-11-11 | Feature #1b local dev setup: added `app.doctor`, hardened offline `.env` validation, documented the no-Docker setup, and verified the doctor tests. | tests passed (doctor + full suite) |
