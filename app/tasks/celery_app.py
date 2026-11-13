@@ -13,4 +13,4 @@ celery_app.conf.update(
     task_track_started=True,
     task_time_limit=600,
 )
-celery_app.autodiscover_tasks(["app.tasks"])
+celery_app.autodiscover_tasks(["app.tasks"], related_name="system")
