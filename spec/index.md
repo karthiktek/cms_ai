@@ -1,7 +1,7 @@
 # Feature Specifications Index
 
-> **Last updated:** 2026-11-12
-> **Changed:** Reviewed remaining local-dev setup, documentation, and test/config changes; all requested checks pass.
+> **Last updated:** 2026-11-13
+> **Changed:** Added Flower to the dev tools and documented the local observability setup.
 
 This is the single source of truth for every feature in the **TekWissen CMS – AI Service**:
 what is planned, what is being built, and what has shipped.
@@ -100,7 +100,7 @@ what is planned, what is being built, and what has shipped.
 ## Current phase
 
 - Phase: Feature #1 and local dev setup (#1b) are complete; live services and the full repository checks pass.
-- Next: feature #2, service auth & errors; remaining reviewed changes are grouped for commit and push.
+- Next: feature #2, service auth & errors; API, solo worker, and Flower are running locally for development.
 
 ## Known issues
 
@@ -128,4 +128,5 @@ what is planned, what is being built, and what has shipped.
 | 2026-11-12 | Diagnosed the PostgreSQL timeout with DNS, TCP checks on 5432/6543, Google HTTPS comparison, and a 20-second SQL probe. | passed: DNS/TCP and 20-second database probe; migrations/API health not requested or run |
 | 2026-11-12 | Shared the configurable health timeout, set dev timeout to 15 seconds for Sydney, applied Alembic migrations, and verified `/health` on live services. | passed: Doctor, migration, and `/health` all green |
 | 2026-11-13 | Reviewed the remaining local-dev documentation and test/config changes; ran Ruff, mypy app, and pytest before grouped commits. | passed: Ruff, mypy app, pytest (29 passed; one third-party deprecation warning) |
+| 2026-11-13 | Added Flower to dev dependencies and documented the API, task monitor, database, Redis, and model URLs with local start commands; verified a real worker ping in Flower. | passed: uv sync; ping SUCCESS; Ruff, mypy app, pytest (29 passed; one third-party deprecation warning) |
 <!-- WORKLOG:END -->

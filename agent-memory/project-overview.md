@@ -1,7 +1,7 @@
 # Project Overview
 
-> **Last updated:** 2026-11-12
-> **Changed:** Documented the shared health/Doctor timeout and remote Supabase guidance.
+> **Last updated:** 2026-11-13
+> **Changed:** Added Flower monitoring and local service startup links.
 
 ---
 
@@ -141,6 +141,28 @@ Local developers work without Docker. The supported setup is:
 - Upstash Redis for the broker and cache
 
 Use `uv run python -m app.doctor` before starting the API or workers. It checks for missing `.env` values, placeholder secrets, invalid database URLs, redis/TLS issues, model reachability, and the `LLM_THINK=false` rule without printing raw secrets. Doctor and `/health` use the shared SQLAlchemy database connectivity probe. When the secret URL values are still blank, the doctor reports them as missing and the developer must paste them manually before live connectivity checks can pass.
+
+## See it running
+
+Open these local and service dashboards while developing:
+
+| Tool | URL |
+|------|-----|
+| API docs | `http://localhost:8000/docs` |
+| Flower task monitor | `http://localhost:5555` |
+| Supabase Table Editor (`ai` schema) | `https://supabase.com/dashboard/project/<project-ref>/editor?schema=ai` |
+| Upstash Data Browser | `https://console.upstash.com/redis` |
+| Ollama model list | `http://localhost:11434/api/tags` |
+
+Start each local process in its own terminal from `sdd-template/`:
+
+```powershell
+uv run uvicorn app.main:app --port 8000
+uv run celery -A app.tasks.celery_app worker --pool=solo -l info
+uv run celery -A app.tasks.celery_app flower --port=5555
+```
+
+The `solo` worker pool is suitable for the local Windows development environment. The API and Flower monitor are separate from the worker process.
 
 ---
 
