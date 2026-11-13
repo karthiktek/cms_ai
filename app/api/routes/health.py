@@ -1,13 +1,14 @@
 import asyncio
-from collections.abc import Awaitable, Callable, Iterator
+from collections.abc import Awaitable, Callable
 
-import asyncpg
 import httpx
 import redis.asyncio as redis
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
+from sqlalchemy.exc import SQLAlchemyError
 
 from app.config import get_settings
+from app.database import check_database_connection
 
 router = APIRouter()
 
@@ -15,11 +16,12 @@ router = APIRouter()
 async def check_database() -> str:
     settings = get_settings()
     try:
-        conn = await asyncpg.connect(settings.DATABASE_URL, timeout=settings.HEALTH_TIMEOUT_SECONDS)
-        await conn.execute("SELECT 1")
-        await conn.close()
+        await check_database_connection(
+            settings.DATABASE_URL,
+            settings.HEALTH_TIMEOUT_SECONDS,
+        )
         return "ok"
-    except (asyncpg.PostgresError, OSError, TimeoutError, ValueError):
+    except (SQLAlchemyError, OSError, TimeoutError, ValueError):
         return "down"
 
 
@@ -50,25 +52,17 @@ async def check_model() -> str:
         return "down"
 
 
-class HealthCheckRegistry(list[Callable[[], Awaitable[str]]]):
-    def __iter__(self) -> Iterator[Callable[[], Awaitable[str]]]:
-        return iter([check_database, check_redis, check_model])
-
-
-HEALTH_CHECKS: HealthCheckRegistry = HealthCheckRegistry([
-    check_database,
-    check_redis,
-    check_model,
-])
+HEALTH_CHECKS: dict[str, Callable[[], Awaitable[str]]] = {
+    "database": check_database,
+    "redis": check_redis,
+    "model": check_model,
+}
 
 
 async def run_health_checks() -> dict[str, str]:
-    results = await asyncio.gather(*(check() for check in HEALTH_CHECKS))
-    return {
-        "database": results[0],
-        "redis": results[1],
-        "model": results[2],
-    }
+    names = tuple(HEALTH_CHECKS)
+    results = await asyncio.gather(*(check() for check in HEALTH_CHECKS.values()))
+    return dict(zip(names, results, strict=True))
 
 
 @router.get("/health")

@@ -4,7 +4,7 @@ import asyncio
 from logging.config import fileConfig
 
 from alembic import context
-from sqlalchemy import pool
+from sqlalchemy import pool, text
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
@@ -45,12 +45,15 @@ def do_run_migrations(connection: Connection) -> None:
 
 async def run_migrations_online() -> None:
     settings = get_settings()
-    config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+    config.set_main_option("sqlalchemy.url", settings.DATABASE_URL.replace("%", "%%"))
     connectable = async_engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
+
+    async with connectable.begin() as connection:
+        await connection.execute(text("CREATE SCHEMA IF NOT EXISTS ai"))
 
     async with connectable.connect() as connection:
         await connection.run_sync(do_run_migrations)

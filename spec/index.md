@@ -1,7 +1,7 @@
 # Feature Specifications Index
 
-> **Last updated:** 2026-11-11
-> **Changed:** Added the tracker sections for work log, current phase, known issues, and the final decision on worklog automation.
+> **Last updated:** 2026-11-12
+> **Changed:** Verified feature #1 against live PostgreSQL, Redis, and Ollama services.
 
 This is the single source of truth for every feature in the **TekWissen CMS – AI Service**:
 what is planned, what is being built, and what has shipped.
@@ -36,7 +36,8 @@ what is planned, what is being built, and what has shipped.
 
 | # | Status | Feature | Spec document | Endpoints / changes | Implemented |
 |---|--------|---------|---------------|---------------------|-------------|
-| 1 | ✅ done | Service skeleton | `spec/specification/service_skeleton.md` | App factory, config, `GET /health`, Docker Compose (Redis, Postgres+pgvector, Ollama, Langfuse) | 2026-11-11 |
+| 1 | ✅ done — verified on real services | Service skeleton | `spec/specification/service_skeleton.md` | App factory, config, `GET /health`, Docker Compose (Redis, Postgres+pgvector, Ollama, Langfuse) | 2026-11-12 |
+| 1b | ✅ done | Local dev setup | `spec/specification/local_dev_setup.md` | `uv run python -m app.doctor`, `.env` validation, no-Docker setup notes | 2026-11-11 |
 | 2 | 📝 not-specced | Service auth & errors | `spec/specification/service-auth.md` | `X-Service-Key` and workspace headers, request ID, standard error shape | — |
 | 3 | 📝 not-specced | AI database base | `spec/specification/ai-database.md` | `ai` schema, `ai.jobs`, `ai.runs`, row-level security, `workspace_session` | — |
 | 4 | 📝 not-specced | Model gateway | `spec/specification/model-gateway.md` | Qwen3.5-4B client, versioned prompts, forced JSON + one retry, Langfuse tracing | — |
@@ -92,16 +93,19 @@ what is planned, what is being built, and what has shipped.
 - Option A: AI saves `ai_draft`, backend sends verified version, both kept
 - IDs are TEXT with a short prefix
 - Dev without Docker: Ollama app + Supabase + Upstash
+- Dev Supabase is in ap-southeast-2 (Sydney); dev timeout 15s; move to ap-south-1 if latency is a problem.
 - Work log updates are managed by `scripts/update_worklog.py` and the local `.githooks/pre-commit` hook.
+- The doctor and application use `app.config.Settings` as the shared environment configuration source; doctor output never prints secret values.
 
 ## Current phase
 
-- Phase: V1 service skeleton complete.
+- Phase: Feature #1 is verified on real services; Doctor, Alembic, and `/health` passed for PostgreSQL, Redis, and Ollama.
 - Next: feature #2, service auth & errors.
 
 ## Known issues
 
-- No open issues. Status: fixed.
+- An earlier short Doctor database probe timed out; the shared 15-second timeout now passes live Doctor, migrations, and `/health` checks. Status: fixed.
+- Doctor database connectivity previously passed `postgresql+asyncpg://` directly to `asyncpg.connect`; both Doctor and health now use the shared SQLAlchemy async-engine helper. Status: fixed.
 
 ## Eval results
 
@@ -114,4 +118,13 @@ what is planned, what is being built, and what has shipped.
 | Date | What was done | Result |
 |------|---------------|--------|
 | 2026-11-11 | Feature #1 cleanup: moved env reads behind functions, added `LLM_THINK`, and verified the repo checks. | tests passed (ruff + mypy + pytest) |
+| 2026-11-11 | Feature #1b local dev setup: added `app.doctor`, hardened offline `.env` validation, documented the no-Docker setup, and verified the doctor tests. | tests passed (doctor + full suite) |
+| 2026-11-11 | Fixed the doctor to read `.env` values at runtime, kept secret values masked in output, and re-ran the repo validation. | tests passed (ruff + mypy + pytest) |
+| 2026-11-12 | Made `Settings` the shared app/doctor configuration source, isolated tests, and added temporary-dotenv and AI key placeholder coverage. | passed: doctor, ruff, mypy app, pytest (26 passed; one third-party deprecation warning) |
+| 2026-11-12 | Added `agent-memory/flow.md` with code-verified connection statuses and documented implemented-vs-planned boundaries. | passed: documentation cross-check against config, health, Celery, Alembic, and doctor code |
+| 2026-11-12 | Fixed `/health` database connectivity with a SQLAlchemy async engine, verified Celery ping discovery through the app registry, and completed flow sections 3–9 and documentation references. | passed: Ruff, mypy app (19 files), pytest (27 passed; one third-party deprecation warning) |
+| 2026-11-12 | Replaced the health registry class with a name-keyed dict, shared one SQLAlchemy database probe with Doctor, and tested dynamic health-check registration. | pending validation |
+| 2026-11-12 | Configured Upstash Redis cache, broker, and result URLs to use DB 0; ran live Doctor checks. | blocked: PostgreSQL connection timed out; Redis and Ollama passed; migrations/API checks not run |
+| 2026-11-12 | Diagnosed the PostgreSQL timeout with DNS, TCP checks on 5432/6543, Google HTTPS comparison, and a 20-second SQL probe. | passed: DNS/TCP and 20-second database probe; migrations/API health not requested or run |
+| 2026-11-12 | Shared the configurable health timeout, set dev timeout to 15 seconds for Sydney, applied Alembic migrations, and verified `/health` on live services. | passed: Doctor, migration, and `/health` all green |
 <!-- WORKLOG:END -->

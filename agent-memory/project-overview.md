@@ -1,7 +1,7 @@
 # Project Overview
 
-> **Last updated:** 2026-11-11
-> **Changed:** Added the working service skeleton: app factory, config, health checks, Celery worker, Alembic migration, Docker setup, and the baseline test suite.
+> **Last updated:** 2026-11-12
+> **Changed:** Documented the shared health/Doctor timeout and remote Supabase guidance.
 
 ---
 
@@ -29,7 +29,7 @@ of its own. It never publishes anything to clients; consultants approve every ou
 | Embedding model | Qwen3-Embedding 0.6B | Fact matching and document search |
 | Model serving | Ollama (development) → vLLM (production) | Private, on TekWissen servers; no outside AI services |
 | Background jobs | Celery | Agent runs as async jobs (`job_id`) |
-| Cache & broker | Redis | Job input/result cache, Celery broker, locks |
+| Cache & broker | Redis | On Upstash free plan all roles use DB 0, separated by key names; local Docker may use separate DB numbers |
 | Database | PostgreSQL + SQLAlchemy + Alembic | `ai` schema: drafts, facts, analyses, versions, runs |
 | Vector search | pgvector | Inside PostgreSQL |
 | File storage | Supabase Storage → Azure Blob (production) | Uploaded files, generated documents |
@@ -41,7 +41,7 @@ of its own. It never publishes anything to clients; consultants approve every ou
 | Auth | Service key + user/role/workspace headers | Users are authenticated by the backend team |
 | Tests | pytest | Unit, agent (fake model), evaluation on samples |
 | Packaging | uv | Locked dependencies |
-| Local environment | Docker Compose | Redis, PostgreSQL, Ollama, Langfuse, API, workers |
+| Local environment | Ollama app + Supabase session pooler + Upstash Redis | No-Docker developer setup for model, Postgres and cache |
 
 ---
 
@@ -94,15 +94,16 @@ dev = [
 | `AI_SERVICE_KEY` | — | Key the backend team uses to call this service |
 | `DATABASE_URL` | — | PostgreSQL connection (AI service user) |
 | `CORE_DATABASE_URL` | — | Read-only connection to backend data (if direct access is agreed) |
-| `REDIS_URL` | `redis://localhost:6379/0` | Cache and locks |
-| `CELERY_BROKER_URL` | `redis://localhost:6379/1` | Celery broker |
-| `CELERY_RESULT_BACKEND` | `redis://localhost:6379/2` | Celery results |
+| `REDIS_URL` | `redis://localhost:6379/0` | Cache and locks; use DB 0 on Upstash |
+| `CELERY_BROKER_URL` | `redis://localhost:6379/1` | Celery broker; use DB 0 on Upstash, separated by broker key names |
+| `CELERY_RESULT_BACKEND` | `redis://localhost:6379/2` | Celery results; use DB 0 on Upstash, separated by result key names |
 | `MODEL_SERVER_URL` | `http://localhost:11434` | Ollama (dev) or vLLM (prod) endpoint |
 | `LLM_MODEL` | `qwen3.5:4b` | Language model name (confirm exact tag at setup) |
 | `EMBED_MODEL` | `qwen3-embedding:0.6b` | Embedding model name (confirm exact tag at setup) |
 | `LLM_TIMEOUT_SECONDS` | `60` | Max time per model call |
 | `LLM_MAX_RETRIES` | `1` | Retries on invalid output |
 | `JOB_CACHE_TTL_SECONDS` | `86400` | Expiry of job data in Redis |
+| `HEALTH_TIMEOUT_SECONDS` | `2` | Shared timeout for health and Doctor live checks; remote dev databases such as Supabase Sydney may need `15` |
 | `FILE_STORAGE_URL` | — | File storage endpoint |
 | `FILE_STORAGE_KEY` | — | File storage access key |
 | `LANGFUSE_HOST` | `http://localhost:3000` | Langfuse server |
@@ -125,9 +126,21 @@ dev = [
 | `up` | `docker compose up -d` | Start Redis, PostgreSQL, Ollama, Langfuse |
 | `migrate` | `uv run alembic upgrade head` | Apply database migrations |
 | `test` | `uv run pytest` | Run all tests |
+| `doctor` | `uv run python -m app.doctor` | Validate `.env` and local service connectivity without Docker |
 | `eval` | `uv run python -m tests.eval` | Run evaluation on sample inputs |
 | `lint` | `uv run ruff check . && uv run mypy .` | Lint and type check |
 | `format` | `uv run ruff format .` | Format code |
+
+---
+
+## Local dev without Docker
+
+Local developers work without Docker. The supported setup is:
+- Ollama Windows app for the model server
+- Supabase Session Pooler for PostgreSQL
+- Upstash Redis for the broker and cache
+
+Use `uv run python -m app.doctor` before starting the API or workers. It checks for missing `.env` values, placeholder secrets, invalid database URLs, redis/TLS issues, model reachability, and the `LLM_THINK=false` rule without printing raw secrets. Doctor and `/health` use the shared SQLAlchemy database connectivity probe. When the secret URL values are still blank, the doctor reports them as missing and the developer must paste them manually before live connectivity checks can pass.
 
 ---
 
@@ -140,6 +153,8 @@ dev = [
 | Model gateway | 0 | — |
 | Intake Summary Agent | 0 | — |
 | Evaluation (sample intakes) | 0 | — |
-| Service skeleton | 11 | passed |
+| Service skeleton | 13 | pending full run |
+| Doctor / local dev validation | 12 | pending full run |
+| Full suite | 29 | pending full run |
 
 > Update this table after every test suite is added or changed.
