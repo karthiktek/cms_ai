@@ -42,6 +42,7 @@ asyncio_default_fixture_loop_scope = "function"
 
 [tool.ruff]
 line-length = 100
+extend-exclude = ["legacy"]
 
 [tool.mypy]
 python_version = "3.12"

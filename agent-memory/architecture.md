@@ -1,7 +1,7 @@
 # Architecture & Project Structure
 
-> **Last updated:** 2026-11-12
-> **Changed:** Added the shared database probe to the app structure and documented the name-keyed health check map.
+> **Last updated:** 2026-11-13
+> **Changed:** Documented the preserved legacy model-agent project and its local-only assets.
 
 ---
 
@@ -82,6 +82,10 @@ sdd-template/
 │       └── repositories/          — async functions agents/tasks/routes call
 │
 ├── migrations/                    ← Alembic migrations (ai schema)
+
+├── legacy/
+│   └── cms_agent/                 ← preserved standalone model-agent project
+│       └── agent/                 ← legacy code, samples and local model files
 │
 ├── tests/
 │   ├── api/                       — endpoint + security tests
@@ -103,6 +107,8 @@ sdd-template/
 ```
 
 See `agent-memory/flow.md` for detailed startup, connection, health, migration, worker, and planned request-flow diagrams.
+
+The legacy project is retained for reference and local use; its GGUF weights and source/processed/gold datasets are ignored by Git. New service features belong under `app/` and must follow the gateway, schema, prompt, and rules boundaries below.
 
 ---
 
