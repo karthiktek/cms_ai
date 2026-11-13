@@ -1,7 +1,7 @@
 # Feature Specifications Index
 
 > **Last updated:** 2026-11-13
-> **Changed:** Added Flower to the dev tools and documented the local observability setup.
+> **Changed:** Recorded the legacy model output-contract question for Feature #6.
 
 This is the single source of truth for every feature in the **TekWissen CMS – AI Service**:
 what is planned, what is being built, and what has shipped.
@@ -83,6 +83,7 @@ what is planned, what is being built, and what has shipped.
 - X-User-Role values
 - snake_case vs camelCase
 - Final problem_category list
+- Feature #6 output contract: IntakeSummary (spec) vs IntakeAnalysis (tuned model cms-summary-v2) — decide before #6.
 
 ## Decisions
 
@@ -99,8 +100,8 @@ what is planned, what is being built, and what has shipped.
 
 ## Current phase
 
-- Phase: Feature #1 and local dev setup (#1b) are complete; live services and the full repository checks pass.
-- Next: feature #2, service auth & errors; API, solo worker, and Flower are running locally for development.
+- Phase: Backend skeleton is integrated with the preserved legacy model-agent project on `merge/legacy-model-agent`; legacy code and local data remain unchanged and excluded from Git where specified.
+- Next: review the merge PR; decide the Feature #6 output contract before starting that feature.
 
 ## Known issues
 
@@ -117,6 +118,7 @@ what is planned, what is being built, and what has shipped.
 <!-- WORKLOG:START -->
 | Date | What was done | Result |
 |------|---------------|--------|
+| 2026-11-13 | Added the legacy model-agent project under `legacy/cms_agent`, excluded local model/data/environment assets from Git, scoped Ruff away from unchanged legacy code, and recorded the Feature #6 output-contract question. | passed: backup count/size match; Doctor, Ruff, mypy app, pytest (29 passed), and `/health` passed |
 | 2026-11-11 | Feature #1 cleanup: moved env reads behind functions, added `LLM_THINK`, and verified the repo checks. | tests passed (ruff + mypy + pytest) |
 | 2026-11-11 | Feature #1b local dev setup: added `app.doctor`, hardened offline `.env` validation, documented the no-Docker setup, and verified the doctor tests. | tests passed (doctor + full suite) |
 | 2026-11-11 | Fixed the doctor to read `.env` values at runtime, kept secret values masked in output, and re-ran the repo validation. | tests passed (ruff + mypy + pytest) |

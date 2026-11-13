@@ -17,6 +17,15 @@ venv/
 .coverage
 htmlcov/
 
+# Local model weights and legacy datasets
+*.gguf
+legacy/cms_agent/agent/onboarding_agent/model/*.gguf
+legacy/**/data/source/
+legacy/**/data/processed/
+legacy/**/data/gold/
+legacy/cms_agent/agent/onboarding_agent/samples/
+data/raw/
+
 # OS/editor
 .DS_Store
 .vscode/
